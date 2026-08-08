@@ -7,3 +7,6 @@ class IDeviceReadingRepository(ABC):
     def save(self, reading: DeviceReading):
         pass
 
+    @abstractmethod
+    def getLastBydDevEui(self, devEui: str) -> DeviceReading:
+        pass
