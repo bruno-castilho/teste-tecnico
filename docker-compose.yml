@@ -1,4 +1,26 @@
 services:
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+  db:
+    image: timescale/timescaledb-ha:pg16
+    environment:
+      POSTGRES_DB: sensorweb
+      POSTGRES_USER: sensorweb
+      POSTGRES_PASSWORD: sensorweb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
   broker:
     image: eclipse-mosquitto:2
     ports:
@@ -16,3 +38,6 @@ services:
       MQTT_PORT: "1883"
       PUBLISH_INTERVAL_SECONDS: "3"
     restart: unless-stopped
+
+volumes:
+  pgdata:
