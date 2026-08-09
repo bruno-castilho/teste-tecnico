@@ -2,6 +2,7 @@ from app.domain.use_cases import IngestSensorDataParams, IngestSensorData
 from app.infra.repositories import DeviceRepository, DeviceReadingRepository
 
 import json
+import os
 
 import paho.mqtt.client as mqtt
 
@@ -11,17 +12,21 @@ class SensorIngestionConsumer:
             self,
             topic: str = "application/+/device/+/event/up",
             mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2),
-            ingestSensorDataUseCase: IngestSensorData = IngestSensorData(DeviceRepository(), DeviceReadingRepository())
+            ingestSensorDataUseCase: IngestSensorData = IngestSensorData(DeviceRepository(), DeviceReadingRepository()),
+            host: str = os.getenv("MQTT_HOST", "localhost"),
+            port: int = int(os.getenv("MQTT_PORT", "1883")),
     ):
         self.__topic = topic
         self.__mqttClient = mqttClient
         self.__ingestSensorDataUseCase = ingestSensorDataUseCase
+        self.__host = host
+        self.__port = port
 
     def start(self):
         self.__mqttClient.on_message = self.__on_message
         self.__mqttClient.on_connect = self.__on_connect
 
-        self.__mqttClient.connect("localhost", 1883)
+        self.__mqttClient.connect(self.__host, self.__port)
 
         self.__mqttClient.loop_forever()
 

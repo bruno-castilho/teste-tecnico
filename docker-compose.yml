@@ -1,5 +1,4 @@
 services:
-
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
@@ -37,6 +36,33 @@ services:
       MQTT_HOST: broker
       MQTT_PORT: "1883"
       PUBLISH_INTERVAL_SECONDS: "3"
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+      - broker
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: sensorweb
+      DB_USER: sensorweb
+      DB_PASSWORD: sensorweb
+      MQTT_HOST: broker
+      MQTT_PORT: "1883"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,backend"
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
     restart: unless-stopped
 
 volumes:

@@ -108,7 +108,7 @@ export function DeviceCard({ device }: DeviceCardProps) {
         {object ? (
           <Chip
             icon={<BatteryStdIcon />}
-            label={`${object.Bateria.toFixed(2)} V`}
+            label={`${object.Bateria.toFixed(2)}`}
             size="small"
             variant="outlined"
             color="success"

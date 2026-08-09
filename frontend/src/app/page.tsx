@@ -20,10 +20,10 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useQuery } from "@tanstack/react-query";
 import { listDevices } from "@/api/list_devices";
 import { DeviceCard } from "../components/DeviceCard";
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 
 
-export default function DevicesPage() {
+function DevicesPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
@@ -214,5 +214,13 @@ export default function DevicesPage() {
         </>
       )}
     </Container>
+  );
+}
+
+export default function DevicesPage() {
+  return (
+    <Suspense>
+      <DevicesPageContent />
+    </Suspense>
   );
 }
