@@ -1,18 +1,22 @@
-import { api } from "@/lib/axios"
-import { DeviceReading } from "@/types/device_reading"
+import { api } from "@/lib/axios";
+import type { DeviceReading } from "@/types/device_reading";
 
 interface GetCurrentReadingDeviceParams {
-    devEui: string
+  devEui: string;
 }
 
 interface GetCurrentReadingDeviceResponse {
-    deviceReading: DeviceReading
+  deviceReading: DeviceReading;
 }
 
-export async function getCurrentReadingDevice(params: GetCurrentReadingDeviceParams){
-    const { devEui } = params
+export async function getCurrentReadingDevice(
+  params: GetCurrentReadingDeviceParams,
+) {
+  const { devEui } = params;
 
-    const response = await api.get<GetCurrentReadingDeviceResponse>(`/devices/${devEui}/current-reading`)
+  const response = await api.get<GetCurrentReadingDeviceResponse>(
+    `/devices/${devEui}/current-reading`,
+  );
 
-    return response.data
+  return response.data;
 }

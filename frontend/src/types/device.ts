@@ -1,4 +1,3 @@
-
 export interface Device {
   devEui: string;
   deviceName: string;

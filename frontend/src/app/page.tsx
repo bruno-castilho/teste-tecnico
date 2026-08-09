@@ -13,74 +13,72 @@ import TextField from "@mui/material/TextField";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useRef } from "react";
+import { listDevices } from "@/api/list_devices";
 import { DeviceCardSkeleton } from "@/components/DeviceCardSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useQuery } from "@tanstack/react-query";
-import { listDevices } from "@/api/list_devices";
 import { DeviceCard } from "../components/DeviceCard";
-import { Suspense, useRef } from "react";
 
+const SKELETON_KEYS = ["s1", "s2", "s3", "s4", "s5", "s6"];
 
 function DevicesPageContent() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const page = Number(searchParams.get('page') ?? 1)
-  const pageSize = Number(searchParams.get('page') ?? 6)
-  const search = searchParams.get('search') ?? ""
-  const sortOrder = (searchParams.get('sortOrder') as 'asc' | 'desc') ?? 'asc'
-  const sortBy = (searchParams.get('sortBy') as "deviceName" | "deviceProfileName") ?? 'deviceName'
+  const page = Number(searchParams.get("page") ?? 1);
+  const pageSize = Number(searchParams.get("pageSize") ?? 6);
+  const search = searchParams.get("search") ?? "";
+  const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") ?? "asc";
+  const sortBy =
+    (searchParams.get("sortBy") as "deviceName" | "deviceProfileName") ??
+    "deviceName";
 
   const debouncedSearch = useDebouncedValue(search);
 
-  const searchTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const searchTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const { data, isPending, isError } = useQuery({
-    queryKey: ['listDevices', page, pageSize, search, sortOrder, sortBy],
-    queryFn: () =>
-      listDevices({ page, pageSize, search, sortOrder, sortBy}),
-  })
-
+    queryKey: ["listDevices", page, pageSize, search, sortOrder, sortBy],
+    queryFn: () => listDevices({ page, pageSize, search, sortOrder, sortBy }),
+  });
 
   function handleChangeSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    const value = event.target.value
+    const value = event.target.value;
 
     if (searchTimeout.current) {
-      clearTimeout(searchTimeout.current)
+      clearTimeout(searchTimeout.current);
     }
 
     searchTimeout.current = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString())
+      const params = new URLSearchParams(searchParams.toString());
       if (value) {
-        params.set('search', value)
+        params.set("search", value);
       } else {
-        params.delete('search')
+        params.delete("search");
       }
-      router.push(`${pathname}?${params.toString()}`)
-    }, 500)
+      router.push(`${pathname}?${params.toString()}`);
+    }, 500);
   }
 
   function handleChangeSortBy(event: React.ChangeEvent<HTMLInputElement>) {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('sortBy', event.target.value)
-    router.push(`${pathname}?${params.toString()}`)
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sortBy", event.target.value);
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   function handleChangeSortOrder(
     _event: React.MouseEvent<HTMLElement>,
-    value: 'asc' | 'desc' | null,
+    value: "asc" | "desc" | null,
   ) {
-    if (value === null) return
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('sortOrder', value)
-    router.push(`${pathname}?${params.toString()}`)
+    if (value === null) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sortOrder", value);
+    router.push(`${pathname}?${params.toString()}`);
   }
-
-
-
 
   const devices = data?.devices ?? [];
   const pagination = data?.pagination;
@@ -144,12 +142,8 @@ function DevicesPageContent() {
           size="small"
           sx={{ minWidth: 160 }}
         >
-            <MenuItem value='deviceName'>
-              Nome
-            </MenuItem>
-            <MenuItem value='deviceProfileName'>
-              Perfil
-            </MenuItem>
+          <MenuItem value="deviceName">Nome</MenuItem>
+          <MenuItem value="deviceProfileName">Perfil</MenuItem>
         </TextField>
 
         <ToggleButtonGroup
@@ -172,8 +166,8 @@ function DevicesPageContent() {
 
       {isPending ? (
         <Grid container spacing={{ xs: 2, md: 3 }}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
+          {SKELETON_KEYS.map((key) => (
+            <Grid key={key} size={{ xs: 12, sm: 6, md: 4 }}>
               <DeviceCardSkeleton />
             </Grid>
           ))}
@@ -206,7 +200,11 @@ function DevicesPageContent() {
               <Pagination
                 count={pagination.totalPages}
                 page={pagination.page}
-                onChange={(_event, value) => {}}
+                onChange={(_event, value) => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set("page", String(value));
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
                 color="primary"
               />
             </Stack>

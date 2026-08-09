@@ -5,7 +5,6 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
 
-
 export function DeviceCardSkeleton() {
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>

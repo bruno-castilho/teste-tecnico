@@ -1,4 +1,3 @@
-import { getDeviceReadingHistory } from "@/api/get_device_reading_history";
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -9,37 +8,32 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-
+import { getDeviceReadingHistory } from "@/api/get_device_reading_history";
 
 interface InternalHumidityChartProps {
   open: boolean;
   onClose: () => void;
-  devEui: string
+  devEui: string;
 }
-
 
 export function InternalHumidityChart({
   open,
   onClose,
   devEui,
 }: InternalHumidityChartProps) {
-
   const { data, isPending, isError } = useQuery({
-    queryKey: ['getDeviceReadingHistory', devEui],
-    queryFn: () =>
-      getDeviceReadingHistory({ devEui }),
+    queryKey: ["getDeviceReadingHistory", devEui],
+    queryFn: () => getDeviceReadingHistory({ devEui }),
     enabled: open,
-  })
+  });
 
-
-  const humidities: number[] = []
-  const times: Date[] = []
+  const humidities: number[] = [];
+  const times: Date[] = [];
 
   data?.deviceReadings.forEach((deviceReading) => {
-    humidities.push(deviceReading.object.Hum_SHT)
-    times.push(new Date(deviceReading.time))
-  })
-
+    humidities.push(deviceReading.object.Hum_SHT);
+    times.push(new Date(deviceReading.time));
+  });
 
   return (
     <Dialog

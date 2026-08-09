@@ -10,27 +10,25 @@ import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { ptBR } from 'date-fns/locale'
-import { Device } from "@/types/device";
 import { useQuery } from "@tanstack/react-query";
-import { getCurrentReadingDevice } from "@/api/get_current_reading_device";
-import { SensorMetics } from "./SensorMetrics";
 import { format, formatDistanceToNow } from "date-fns";
-
+import { ptBR } from "date-fns/locale";
+import { getCurrentReadingDevice } from "@/api/get_current_reading_device";
+import type { Device } from "@/types/device";
+import { SensorMetics } from "./SensorMetrics";
 
 interface DeviceCardProps {
   device: Device;
 }
 
 export function DeviceCard({ device }: DeviceCardProps) {
-  const { data, isPending, isError } = useQuery({
-    queryKey: ['getCurrentReadingDevice', device.devEui],
-    queryFn: () =>
-      getCurrentReadingDevice({ devEui: device.devEui }),
-  })
+  const { data, isPending } = useQuery({
+    queryKey: ["getCurrentReadingDevice", device.devEui],
+    queryFn: () => getCurrentReadingDevice({ devEui: device.devEui }),
+  });
 
-  const deviceReading = data?.deviceReading
-  const object = deviceReading?.object
+  const deviceReading = data?.deviceReading;
+  const object = deviceReading?.object;
 
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -83,13 +81,13 @@ export function DeviceCard({ device }: DeviceCardProps) {
         ) : !object ? (
           <NoDataPlaceholder message="Leitura sem dados de sensor" />
         ) : (
-          <SensorMetics 
+          <SensorMetics
             devEui={device.devEui}
-            Ext_Hum_SHT={object.Ext_Hum_SHT} 
+            Ext_Hum_SHT={object.Ext_Hum_SHT}
             Ext_TempC_SHT={object.Ext_TempC_SHT}
             Hum_SHT={object.Hum_SHT}
             TempC_SHT={object.TempC_SHT}
-           />
+          />
         )}
       </CardContent>
 
@@ -118,7 +116,7 @@ export function DeviceCard({ device }: DeviceCardProps) {
         )}
 
         {deviceReading && (
-          <Tooltip   
+          <Tooltip
             title={format(deviceReading.time, "dd/MM/yyyy 'às' HH:mm:ss", {
               locale: ptBR,
             })}
@@ -142,7 +140,6 @@ export function DeviceCard({ device }: DeviceCardProps) {
     </Card>
   );
 }
-
 
 function NoDataPlaceholder({ message }: { message: string }) {
   return (

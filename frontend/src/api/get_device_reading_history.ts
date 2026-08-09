@@ -1,18 +1,22 @@
-import { api } from "@/lib/axios"
-import { DeviceReading } from "@/types/device_reading"
+import { api } from "@/lib/axios";
+import type { DeviceReading } from "@/types/device_reading";
 
 interface GetDeviceReadingHistoryParams {
-    devEui: string
+  devEui: string;
 }
 
 interface GetDeviceReadingHistoryResponse {
-    deviceReadings: DeviceReading[]
+  deviceReadings: DeviceReading[];
 }
 
-export async function getDeviceReadingHistory(params: GetDeviceReadingHistoryParams){
-    const { devEui } = params
+export async function getDeviceReadingHistory(
+  params: GetDeviceReadingHistoryParams,
+) {
+  const { devEui } = params;
 
-    const response = await api.get<GetDeviceReadingHistoryResponse>(`/devices/${devEui}/device-reading-history`)
+  const response = await api.get<GetDeviceReadingHistoryResponse>(
+    `/devices/${devEui}/device-reading-history`,
+  );
 
-    return response.data
+  return response.data;
 }
