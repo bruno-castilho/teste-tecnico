@@ -28,4 +28,9 @@ urlpatterns = [
         views.get_current_reading,
         name='get_current_reading',
     ),
+    path(
+        'devices/<str:devEui>/device-reading-history',
+        views.get_device_reading_history,
+        name='get_device_reading_history',
+    ),
 ]

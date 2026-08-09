@@ -2,3 +2,4 @@ from .ingest_sensor_data import IngestSensorData, IngestSensorDataParams
 from .get_current_reading_device import GetCurrentReadingDevice, GetCurrentReadingDeviceParams
 from .get_device import GetDevice, GetDeviceParams
 from .list_devices import ListDevices, ListDevicesParams
+from .get_device_reading_history import GetDeviceReadingHistory, GetDeviceReadingHistoryParams

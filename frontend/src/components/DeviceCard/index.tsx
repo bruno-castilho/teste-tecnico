@@ -30,7 +30,7 @@ export function DeviceCard({ device }: DeviceCardProps) {
   })
 
   const deviceReading = data?.deviceReading
-  const object = deviceReading?.object;
+  const object = deviceReading?.object
 
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -84,6 +84,7 @@ export function DeviceCard({ device }: DeviceCardProps) {
           <NoDataPlaceholder message="Leitura sem dados de sensor" />
         ) : (
           <SensorMetics 
+            devEui={device.devEui}
             Ext_Hum_SHT={object.Ext_Hum_SHT} 
             Ext_TempC_SHT={object.Ext_TempC_SHT}
             Hum_SHT={object.Hum_SHT}

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app.domain.entities import DeviceReading
 from app.domain.repositories import IDeviceReadingRepository
 
@@ -24,6 +26,14 @@ class DeviceReadingRepository(IDeviceReadingRepository):
             return None
 
         return self.__to_entity(model)
+
+    def listByDevEuiSince(self, devEui: str, since: datetime) -> list[DeviceReading]:
+        models = (
+            DeviceReadingModel.objects.filter(device_id=devEui, time__gte=since)
+            .order_by("time")
+        )
+
+        return [self.__to_entity(model) for model in models]
 
     def __to_entity(self, model: DeviceReadingModel) -> DeviceReading:
         return DeviceReading(
