@@ -3,10 +3,23 @@ from dataclasses import asdict
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_GET
 
-from app.infra.http.controllers import GetCurrentReadingDeviceController, GetDeviceController
+from app.infra.http.controllers import (
+    GetCurrentReadingDeviceController,
+    GetDeviceController,
+    ListDevicesController,
+)
 
 getDeviceController = GetDeviceController()
 getCurrentReadingDeviceController = GetCurrentReadingDeviceController()
+listDevicesController = ListDevicesController()
+
+
+@require_GET
+def list_devices(request: HttpRequest):
+    params = {key: value for key, value in request.GET.items()}
+    response = listDevicesController.execute(params)
+
+    return JsonResponse(response)
 
 
 @require_GET

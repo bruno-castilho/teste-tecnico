@@ -21,6 +21,7 @@ from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('devices', views.list_devices, name='list_devices'),
     path('devices/<str:devEui>', views.get_device, name='get_device'),
     path(
         'devices/<str:devEui>/current-reading',

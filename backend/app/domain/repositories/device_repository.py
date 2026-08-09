@@ -7,5 +7,16 @@ class IDeviceRepository(ABC):
         pass
 
     @abstractmethod
+    def list(
+        self,
+        page: int,
+        pageSize: int,
+        search: str,
+        sortBy: str,
+        sortOrder: str,
+    ) -> tuple[list[Device], int]:
+        pass
+
+    @abstractmethod
     def save(self, device: Device):
         pass

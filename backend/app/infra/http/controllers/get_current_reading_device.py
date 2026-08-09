@@ -15,8 +15,8 @@ class GetCurrentReadingDeviceController:
         getCurrentReadingParams = GetCurrentReadingDeviceParams.model_validate({
             "devEui": devEui
         })
-        reading = self.__getCurrentReadingDeviceUseCase.execute(getCurrentReadingParams)
+        deviceReading = self.__getCurrentReadingDeviceUseCase.execute(getCurrentReadingParams)
 
         return {
-            "reading": asdict(reading)
+            "deviceReading": asdict(deviceReading)
         }
